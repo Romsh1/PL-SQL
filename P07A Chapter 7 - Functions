@@ -1,0 +1,42 @@
+--- Romika Chaudhary ---
+--- March 6, 2024 ---
+--- P07A Chapter 7: Functions ---
+
+-- 1
+CREATE OR REPLACE FUNCTION convert_numeric_grade
+(p_numeric_grade IN GL_ENROLLMENTS.numeric_grade%TYPE,
+p_letter_grade OUT GL_ENROLLMENTS.letter_grade%TYPE)
+RETURN VARCHAR2
+IS
+BEGIN
+CASE
+    WHEN p_numeric_grade BETWEEN 90 AND 100 THEN p_letter_grade := 'A';
+    WHEN p_numeric_grade BETWEEN 80 AND 89 THEN p_letter_grade := 'B';
+    WHEN p_numeric_grade BETWEEN 70 AND 79 THEN p_letter_grade := 'C';
+    WHEN p_numeric_grade BETWEEN 60 AND 69 THEN p_letter_grade := 'D';
+    WHEN p_numeric_grade BETWEEN 0 AND 59 THEN p_letter_grade := 'F';
+END CASE;
+RETURN p_letter_grade;
+END convert_numeric_grade;
+
+
+-- INVOKING A FUNCTION --
+DECLARE
+    v_numeric_grade GL_ENROLLMENTS.numeric_grade%TYPE :=  :ENTER_NUMERIC_GRADE;
+    v_letter_grade GL_ENROLLMENTS.letter_grade%TYPE;
+        OUT_OF_RANGE EXCEPTION;
+    PRAGMA EXCEPTION_INIT(OUT_OF_RANGE, -6502);
+BEGIN
+    IF v_numeric_grade < 0 OR v_numeric_grade > 100 THEN
+        RAISE OUT_OF_RANGE;
+    END IF;
+    CONVERT_GRADE(v_numeric_grade, v_letter_grade);
+    DBMS_OUTPUT.PUT_LINE('Numeric grade: ' || v_numeric_grade);
+    DBMS_OUTPUT.PUT_LINE('Letter grade: ' || v_letter_grade);
+EXCEPTION
+WHEN OUT_OF_RANGE THEN
+    DBMS_OUTPUT.PUT_LINE('Grade ' || v_numeric_grade || ' invalid. Must be between 0 and 100.');
+WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error code: ' || SQLCODE);
+    DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
+END;
