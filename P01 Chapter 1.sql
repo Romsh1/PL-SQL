@@ -23,7 +23,7 @@ DECLARE
     v_counter NUMBER(5);    --variable initialized to null
 BEGIN
     v_counter := v_counter + 1;
-    DBMS_OUTPUT.PUT_LINE('The new value of v_counter is: ' || v_counter);
+    DBMS_OUTPUT.PUT_LINE('The new value of v_counter is ' || v_counter);
 END;
 -- The value of v_counter will not return anything as we have not initialized any value to it.
 
